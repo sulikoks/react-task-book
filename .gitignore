@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/build123
+/build
 /.pnp
 .pnp.js
 

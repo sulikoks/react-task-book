@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////   DEPENDENCIES   ////////////////////////////////////////////
 
 import { authAPI } from "../dal/serverAPI"
+import { message } from "antd"
 
 //////////////////////////////////////////////////////////   NAME ACTION TYPES   ///////////////////////////////////////
 
@@ -28,7 +29,7 @@ export default (state = initialState, action) => {
                 isAuth: true
             }
         case UNSET_AUTH_USER:
-            return {...initialState}
+            return { ...initialState }
         case IS_LOADING:
             return {
                 ...state,
@@ -51,18 +52,22 @@ export const login = ({ userName, password }) => async (dispatch) => {
     dispatch(isLoadingToggleAuth(true))
     const data = await authAPI.login(userName, password)
     if (data.status === 'ok') {
-        console.log('CLIENT LOGIN ', data.message.token)
+        console.log('CLIENT LOGIN OK')
+        message.success('Hello admin!!')
         dispatch(setAuthUser(data.message.token))
         dispatch(isLoadingToggleAuth(false))
     } else {
         console.log('CLIENT LOGIN ERROR')
+        message.error('Login or password is incorrect')
         dispatch(isLoadingToggleAuth(false))
     }
 }
 export const logout = () => async (dispatch) => {
     dispatch(isLoadingToggleAuth(true))
     const data = await authAPI.logout()
-    if (data.resCode === 0){
+    if (data.resCode === 0) {
+        console.log('CLIENT LOGOUT OK')
+        message.success('Goodbuy!!')
         dispatch(unsetAuthUser())
         dispatch(isLoadingToggleAuth(false))
     } else {

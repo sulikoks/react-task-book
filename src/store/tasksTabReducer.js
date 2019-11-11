@@ -1,5 +1,6 @@
 import { tasksAPI } from '../dal/serverAPI'
-// import uuid from 'uuid'
+import { message } from "antd"
+
 
 const SET_TASKS = 'task/SET_TASKS'
 const IS_LOADING = 'task/IS_LOADING'
@@ -36,33 +37,41 @@ export default (state = initState, action) => {
 }
 
 export const setTasks = (tasks) => ({ type: SET_TASKS, tasks })
-export const setCurrentPage = (page) => ({ type: SET_CURRENT_PAGE, page})
+export const setCurrentPage = (page) => ({ type: SET_CURRENT_PAGE, page })
 export const isLoadingToggle = (bool) => ({ type: IS_LOADING, bool })
 
 export const getTasks = (currentPage, sortField, sortDirection) => async (dispatch) => {
-    console.log('GET TASKS')
     dispatch(isLoadingToggle(true))
     const data = await tasksAPI.getTasks(currentPage, sortField, sortDirection)
     if (data.status === 'ok') {
-        const tasks = data.message.tasks.map(task => ({ 
-            ...task, 
-            key: task.id, 
+        const tasks = data.message.tasks.map(task => ({
+            ...task,
+            key: task.id,
             status: task.status ? 'Ready' : 'Not Ready'
         }))
+        console.log('CLIENT GET TASKS')
         dispatch(setTasks({ tasks, total: data.message.total_task_count }))
         dispatch(setCurrentPage(currentPage))
         dispatch(isLoadingToggle(false))
+    } else {
+        message.error('Loading tasks is fail')
     }
 }
-export const updateTask = (task) => async (dispatch) => {
-    console.log('UPDATE TASK')
+export const updateTask = (task) => async () => {
     const data = await tasksAPI.putTasks(task)
-    if (data.status === 'ok')
+    if (data.status === 'ok') {
         console.log('CLIENT TASK UPDATED')
+    } else {
+        message.error('Update is fail')
+    }
 }
-export const addTask = (task) => async (dispatch) => {
+export const addTask = (task) => async () => {
     console.log('ADD TASK')
     const data = await tasksAPI.addTask(task)
-    if (data.status === 'ok')
+    if (data.status === 'ok') {
         console.log('CLIENT TASK ADDED')
+        message.success('Task is added')
+    } else {
+        message.error('Added is fail')
+    }
 }

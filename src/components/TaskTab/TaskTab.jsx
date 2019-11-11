@@ -46,23 +46,29 @@ const TaskTab = ({ tasks, total, currentPage, isLoading, getTasks, addTask }) =>
   const onPageChange = (e) => {
     getTasks(e, sort.field, sort.dir)
   }
-  const sorting = (field = sort.field, dir = sort.dir) => {
-    getTasks(currentPage, field, dir)
-    setSort({ field, dir })
+  const sorting = (field) => {
+    if (field === sort.field) {
+      if (sort.dir === 'asc') {
+        getTasks(currentPage, field, 'desc')
+        setSort({ ...sort, dir: 'desc' })
+      } else {
+        getTasks(currentPage, field, 'asc')
+        setSort({ ...sort, dir: 'asc' })
+      }
+    } else {
+        getTasks(currentPage, field, 'asc')
+        setSort({ field, dir: 'asc' })
+    }
   }
   return <div>
 
     <h2>Table Task</h2>
 
-    <Button.Group style={{ marginBottom: '10px', display: 'block' }}>
+    <Button.Group style={{ marginBottom: '10px' }}>
+      <Button onClick={() => sorting('id')}>ID</Button>
       <Button onClick={() => sorting('username')}>Name</Button>
       <Button onClick={() => sorting('email')}>Email</Button>
       <Button onClick={() => sorting('status')}>Status</Button>
-      <Button onClick={() => sorting('id', 'asc')}>Clear</Button>
-    </Button.Group>
-    <Button.Group style={{ marginBottom: '10px' }}>
-      <Button onClick={() => sorting(sort.field, 'asc')}>ASC</Button>
-      <Button onClick={() => sorting(sort.field, 'desc')}>DESC</Button>
     </Button.Group>
 
     <Table

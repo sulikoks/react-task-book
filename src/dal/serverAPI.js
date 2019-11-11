@@ -32,9 +32,10 @@ export const tasksAPI = {
         instance.get(`${myName}&page=${currentPage}&sort_field=${sortField}&sort_direction=${sortDirection}`)
             .then(res => res.data),
     putTasks: ({key, status, text, token}) => {
+        debugger
         const form = new FormData()
         form.append("token", token)
-        form.append("status", status ? 10 : 0)
+        form.append("status", (status === true || status === 'Ready') ? 10 : 0)
         form.append("text", text)
         return instance.post(`/edit/${key+myName}`, form).then(res => res.data)
     },

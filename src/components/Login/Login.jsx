@@ -2,14 +2,12 @@ import React from 'react'
 import { Form, Icon, Input, Button } from 'antd'
 
 
-const LoginForm = ({form, login}) => {
+const LoginForm = ({ form, login }) => {
     const handleSubmit = e => {
         e.preventDefault();
         form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values)
+            if (!err)
                 login(values)
-            }
         })
     }
 
